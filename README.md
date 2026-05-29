@@ -6,8 +6,8 @@ A decentralized no-loss auction system built on Stellar Soroban.
 `CAH5RGKKZ27D6LDN75XFGHHL73C7OZAEBXY4RKC7WTEEGITNXFV6LVIX`
 
 ## Structure
-- `contracts/` — Soroban smart contract (Rust)
-- `frontend/` — React + Vite + Tailwind frontend
+- `contracts/` Soroban smart contract (Rust)
+- `frontend/` React + Vite + Tailwind frontend
 
 ## Features
 - Create auctions
