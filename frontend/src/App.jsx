@@ -78,7 +78,7 @@ export default function App() {
     if (!title || !duration) return notify("Fill all fields", "error");
     try {
       setLoading(true);
-      const account = await rpc.getAccount(keypair.publicKey());
+      
       const op = contract.call(
         "create_auction",
         StellarSdk.nativeToScVal(keypair.publicKey(), { type: "address" }),
@@ -86,7 +86,7 @@ export default function App() {
         StellarSdk.nativeToScVal(title, { type: "string" }),
         StellarSdk.nativeToScVal(Number(duration), { type: "u64" })
       );
-      await simulateAndSend(account, op, keypair);
+      await simulateAndSend(keypair.publicKey(), op, keypair);
       notify("Auction created successfully");
       setTitle(""); setDuration("");
       fetchAuctions();
@@ -102,14 +102,14 @@ export default function App() {
     if (!bidAuctionId || !bidAmount) return notify("Fill all fields", "error");
     try {
       setLoading(true);
-      const account = await rpc.getAccount(keypair.publicKey());
+      
       const op = contract.call(
         "place_bid",
         StellarSdk.nativeToScVal(Number(bidAuctionId), { type: "u64" }),
         StellarSdk.nativeToScVal(keypair.publicKey(), { type: "address" }),
-        StellarSdk.nativeToScVal(BigInt(bidAmount) * BigInt(10_000_000), { type: "i128" })
+        StellarSdk.nativeToScVal(BigInt(Math.floor(Number(bidAmount) * 10_000_000)), { type: "i128" })
       );
-      await simulateAndSend(account, op, keypair);
+      await simulateAndSend(keypair.publicKey(), op, keypair);
       notify("Bid placed successfully");
       setBidAuctionId(""); setBidAmount("");
       fetchAuctions();
@@ -125,8 +125,8 @@ export default function App() {
     if (!finalizeId) return notify("Enter auction ID", "error");
     try {
       setLoading(true);
-      const account = await rpc.getAccount(keypair.publicKey());
-      await simulateAndSend(account,
+      
+      await simulateAndSend(keypair.publicKey(),
         contract.call("finalize_auction", StellarSdk.nativeToScVal(Number(finalizeId), { type: "u64" })),
         keypair
       );
@@ -145,8 +145,8 @@ export default function App() {
     if (!cancelId) return notify("Enter auction ID", "error");
     try {
       setLoading(true);
-      const account = await rpc.getAccount(keypair.publicKey());
-      await simulateAndSend(account,
+      
+      await simulateAndSend(keypair.publicKey(),
         contract.call("cancel_auction", StellarSdk.nativeToScVal(Number(cancelId), { type: "u64" })),
         keypair
       );
